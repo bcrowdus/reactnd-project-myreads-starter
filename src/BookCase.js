@@ -13,6 +13,14 @@ class BooksCase extends React.Component {
         });
     }
 
+    onBookShelfChange = (id, shelf) => {
+  		 this.setState((current) => {
+		 	var found = current.books.find( book => book.id === id);
+		 	found.shelf = shelf;
+		 	return { books : current.books };
+		 });
+	}
+
 
     currentReadingFilter = (book) => book.shelf === 'currentlyReading';
 
@@ -28,9 +36,17 @@ class BooksCase extends React.Component {
 		return (
 			<div className="list-books-content">
       			<div>
-					<BookShelf title="Currently Reading" books={books.filter( this.currentReadingFilter )} />
-					<BookShelf title="Want to Read" books={books.filter( this.wantToReadFilter ) } />
-					<BookShelf title="Read" books={books.filter( this.readFilter )} />
+					<BookShelf title="Currently Reading"
+							   books={books.filter( this.currentReadingFilter )}
+							   onBookShelfChange={this.onBookShelfChange} />
+
+					<BookShelf title="Want to Read"
+							   books={books.filter( this.wantToReadFilter ) }
+							   onBookShelfChange={this.onBookShelfChange} />
+
+					<BookShelf title="Read"
+							   books={books.filter( this.readFilter )}
+							   onBookShelfChange={this.onBookShelfChange} />
 				</div>
 			</div>
 		)
