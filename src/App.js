@@ -1,5 +1,4 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
 import BookCase from './BookCase'
 import './App.css'
 
@@ -12,14 +11,9 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: false,
-    books: []
+
     
   }
-	componentDidMount() {
-		BooksAPI.getAll().then((books) => {
-      		this.setState({ books })
-    	});
-    }
   render() {
     return (
       <div className="app">
