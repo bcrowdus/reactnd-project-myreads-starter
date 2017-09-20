@@ -7,7 +7,7 @@ class Book extends React.Component {
         const { book, onBookShelfChange } = this.props;
         const shelf = e.currentTarget.value;
 
-        onBookShelfChange(book.id, shelf);
+        onBookShelfChange(book, shelf);
     }
 
 

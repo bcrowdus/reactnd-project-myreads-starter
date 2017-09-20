@@ -13,12 +13,21 @@ class BooksCase extends React.Component {
         });
     }
 
-    onBookShelfChange = (id, shelf) => {
-  		 this.setState((current) => {
-		 	var found = current.books.find( book => book.id === id);
-		 	found.shelf = shelf;
-		 	return { books : current.books };
-		 });
+    onBookShelfChange = (book, shelf) => {
+        BooksAPI.update(book, shelf).then( data => {
+        	//TODO: better error handling and display in UI??
+        	if(!data.error) {
+                this.setState((current) => {
+                    var found = current.books.find( b => b.id === book.id);
+                    found.shelf = shelf;
+                    return { books : current.books };
+                });
+			} else {
+        		alert(data.error);
+			}
+
+		})
+
 	}
 
 
