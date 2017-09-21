@@ -11,9 +11,12 @@ class Book extends React.Component {
     }
 
 
+
     render() {
 		const { book } = this.props;
-      
+		// some books apparently do not have authors
+        const authors = book.authors ? book.authors.join("") : "";
+
         return (
             <li>
                 <div className="book">
@@ -22,7 +25,7 @@ class Book extends React.Component {
                 		<BookShelfChanger shelf={book.shelf} onChange={this.onChange} />
                     </div>
                     <div className="book-title">{ book.title }</div>
-                    <div className="book-authors">{ book.authors.join(", ") }</div>
+                    <div className="book-authors">{ authors }</div>
                 </div>
             </li>
         )

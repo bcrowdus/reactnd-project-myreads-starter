@@ -40,7 +40,7 @@ class SearchBooks extends React.Component {
 
 
 	render() {
-		const { books, searchTerm } = this.props;
+		const { books, searchTerm, onBookShelfChange } = this.props;
 		
 		return (
 			<div className="search-books">
@@ -53,7 +53,7 @@ class SearchBooks extends React.Component {
               <div className="search-books-results">
                 <ol className="books-grid">
              		{ 
-          				books.map( book => ( <Book key={book.id} book={book} onBookShelfChange={this.onBookShelfChange} />  ))
+          				books.map( book => ( <Book key={book.id} book={book} onBookShelfChange={onBookShelfChange} />  ))
              		}
              	</ol>
               </div>
