@@ -1,61 +1,31 @@
 import React from 'react'
 import BookShelf from './BookShelf'
-import * as BooksAPI from './BooksAPI'
 
 class BooksCase extends React.Component {
-  	state = {
-        books: []
-	}
+  	
+	bookFilter = (filter) => (book) => book.shelf === filter;
 
-    componentDidMount() {
-        BooksAPI.getAll().then((books) => {
-            this.setState({ books })
-        });
-    }
-
-    onBookShelfChange = (book, shelf) => {
-        BooksAPI.update(book, shelf).then( data => {
-        	//TODO: better error handling and display in UI??
-        	if(!data.error) {
-                this.setState((current) => {
-                    var found = current.books.find( b => b.id === book.id);
-                    found.shelf = shelf;
-                    return { books : current.books };
-                });
-			} else {
-        		alert(data.error);
-			}
-
-		})
-
-	}
-
-
-    currentReadingFilter = (book) => book.shelf === 'currentlyReading';
-
-    wantToReadFilter = (book) => book.shelf === 'wantToRead';
-
-    readFilter = (book) => book.shelf === 'read';
-
-
-
+	currentlyReadingFilter = this.bookFilter('currentlyReading');
+    wantToReadFilter = this.bookFilter('wantToRead');
+    readFilter = this.bookFilter('read');
+	
 	render() {
-		const { books } = this.state
-
+		const { books, onBookShelfChange } = this.props
+		
 		return (
 			<div className="list-books-content">
       			<div>
 					<BookShelf title="Currently Reading"
-							   books={books.filter( this.currentReadingFilter )}
-							   onBookShelfChange={this.onBookShelfChange} />
+							   books={books.filter( this.currentlyReadingFilter )}
+							   onBookShelfChange={onBookShelfChange} />
 
 					<BookShelf title="Want to Read"
-							   books={books.filter( this.wantToReadFilter ) }
-							   onBookShelfChange={this.onBookShelfChange} />
+							   books={books.filter( this.wantToReadFilter  ) }
+							   onBookShelfChange={onBookShelfChange} />
 
 					<BookShelf title="Read"
 							   books={books.filter( this.readFilter )}
-							   onBookShelfChange={this.onBookShelfChange} />
+							   onBookShelfChange={onBookShelfChange} />
 				</div>
 			</div>
 		)
