@@ -42,22 +42,31 @@ class BooksApp extends React.Component {
     };
 
     addToIndex = (book, shelf) => {
-        this.state.shelfIndex[shelf].push(book.id)
+        const shelfIndex = this.state.shelfIndex;
+
+        shelfIndex[shelf].push(book.id);
+
+        this.setState( { shelfIndex } );
 
     }
 
 	onBookShelfChange = (book, shelf) => {
+
 		BooksAPI.update(book, shelf)
 			.then( data => { 
 				this.setState((current) => {
-		 		    var found = current.books.find( b => b.id === book.id);
-		 		    found.shelf = shelf;
-		 		    return { books : current.books, shelfIndex: data };
+                    if(book.shelf == "none") {
+                        current.books.push(book);
+                    }
+                    book.shelf = shelf;
+                    return { books : current.books, shelfIndex: data };
                 });
             });
     }
 
+
 	onSearchTermChange = (searchTerm ) => {
+
          BooksAPI.search(searchTerm, 0)
              .then( books =>  {
                  books.map( book => book.shelf = this.getBookShelf(book));
@@ -81,7 +90,7 @@ class BooksApp extends React.Component {
         return bookShelf;
     };
 
-    
+
   	renderBookCase = () => (
         <div className="list-books">
             <div className="list-books-title">
