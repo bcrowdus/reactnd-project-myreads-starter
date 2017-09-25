@@ -1,12 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Book from './Book'
+import BooksGrid from "./BooksGrid";
 
 class SearchBooks extends React.Component {
-  	
-	onSearchTermChange = (e) => {
-      	const searchTerm = e.currentTarget.value        
-      	this.onSearch(searchTerm);
+
+	searchTerm = this.props.searchTerm;
+
+    onSearchTermChange = (e) => {
+        const {  onSearchTermChange } = this.props
+      	this.searchTerm = e.currentTarget.value
+
+		if(this.searchTerm.length === 0){
+            onSearchTermChange( this.searchTerm );
+		} else {
+            this.onSearch(this.searchTerm);
+		}
+
 
     }
 
@@ -31,17 +40,30 @@ class SearchBooks extends React.Component {
 		};
 	}
 
-	onSearch = this.debounce((searchTerm) => {
+	onSearch = this.debounce(() => {
         const {  onSearchTermChange } = this.props
 
-		onSearchTermChange( searchTerm );
+        if(this.searchTerm.length > 0){
+            onSearchTermChange( this.searchTerm );
+		}
 
-	}, 1000);
 
+
+	}, 800);
+
+    onNoBooks = () => {
+        const { books, searchTerm } = this.props;
+
+        if( searchTerm.length > 0 && books.length === 0 ){
+            return (<h2 style={{ position : 'absolute', left: '45%' }}>No Results</h2>)
+        } else {
+        	return null;
+		}
+    }
 
 	render() {
 		const { books, searchTerm, onBookShelfChange } = this.props;
-		
+
 		return (
 			<div className="search-books">
               <div className="search-books-bar">
@@ -51,11 +73,7 @@ class SearchBooks extends React.Component {
                 </div>
               </div>
               <div className="search-books-results">
-                <ol className="books-grid">
-             		{ 
-          				books.map( book => ( <Book key={book.id} book={book} onBookShelfChange={onBookShelfChange} />  ))
-             		}
-             	</ol>
+                <BooksGrid books={books} onBookShelfChange={onBookShelfChange} onNoBooks={this.onNoBooks}/>
               </div>
             </div>
 		)

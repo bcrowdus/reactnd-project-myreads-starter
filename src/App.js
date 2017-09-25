@@ -10,8 +10,16 @@ class BooksApp extends React.Component {
 	    books: [],
         foundBooks : [],
         searchTerm: "",
-        shelfIndex : { "currentlyReading": [], "wantToRead": [], "read": [] }
+
 	};
+
+    shelfIndex = { }
+
+    constants = {
+        "currentlyReading": "currentlyReading",
+        "wantToRead": "wantToRead",
+        "read": "read"
+    };
 
     componentDidMount() {
       	BooksAPI.getAll().then((books) => {
@@ -21,9 +29,9 @@ class BooksApp extends React.Component {
     }
 
     indexShelves = (books) => {
-        const [ read, wantToRead, currentlyReading ] = [ "read", "wantToRead", "currentlyReading"];
+        const { read, wantToRead, currentlyReading } = this.constants;
 
-        books.map( book => {
+        books.forEach( book => {
             switch(book.shelf) {
 
                 case currentlyReading:
@@ -42,11 +50,7 @@ class BooksApp extends React.Component {
     };
 
     addToIndex = (book, shelf) => {
-        const shelfIndex = this.state.shelfIndex;
-
-        shelfIndex[shelf].push(book.id);
-
-        this.setState( { shelfIndex } );
+        this.shelfIndex[book.id] = shelf;
 
     }
 
@@ -55,11 +59,11 @@ class BooksApp extends React.Component {
 		BooksAPI.update(book, shelf)
 			.then( data => { 
 				this.setState((current) => {
-                    if(book.shelf == "none") {
+                    if(book.shelf === "none") {
                         current.books.push(book);
                     }
                     book.shelf = shelf;
-                    return { books : current.books, shelfIndex: data };
+                    return { books : current.books };
                 });
             });
     }
@@ -67,26 +71,25 @@ class BooksApp extends React.Component {
 
 	onSearchTermChange = (searchTerm ) => {
 
-         BooksAPI.search(searchTerm, 0)
-             .then( books =>  {
-                 books.map( book => book.shelf = this.getBookShelf(book));
+        if(searchTerm === "") {
+            let foundBooks = []
+            this.setState({ foundBooks, searchTerm });
+        } else {
+            BooksAPI.search(searchTerm, 0)
+                .then( books =>  {
+                    if(books.error) {
+                        this.setState( { searchTerm : searchTerm, foundBooks: [] } )
+                    } else {
+                        books.map( book => book.shelf = this.getBookShelf(book));
+                        this.setState( { foundBooks : books, searchTerm : searchTerm } )
+                    }
 
-                 this.setState( { foundBooks : books, searchTerm : searchTerm } )
-             })
-
+                })
+        }
     }
 
     getBookShelf = (book) => {
-        const { shelfIndex } = this.state;
-
-        let bookShelf = Object.keys(shelfIndex)
-            .map( key => shelfIndex[key].indexOf(book.id) >= 0 ? key : "")
-            .join("");
-
-        if( bookShelf === "" ) {
-            bookShelf = "none";
-        }
-
+        let bookShelf = this.shelfIndex[book.id] ? this.shelfIndex[book.id] : 'none';
         return bookShelf;
     };
 

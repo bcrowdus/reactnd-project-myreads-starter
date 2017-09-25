@@ -10,7 +10,13 @@ class Book extends React.Component {
         onBookShelfChange(book, shelf);
     }
 
+    getThumbnail = () => {
+        const { book } = this.props;
 
+        if( book.imageLinks && book.imageLinks.thumbnail ) {
+            return(<div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>);
+        }
+    }
 
     render() {
 		const { book } = this.props;
@@ -21,7 +27,7 @@ class Book extends React.Component {
             <li>
                 <div className="book">
                     <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>
+                        { this.getThumbnail() }
                 		<BookShelfChanger shelf={book.shelf} onChange={this.onChange} />
                     </div>
                     <div className="book-title">{ book.title }</div>
