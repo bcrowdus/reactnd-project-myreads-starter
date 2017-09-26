@@ -8,6 +8,9 @@ body, .app {
   background: white;
 }
 
+.hidden {
+	display: none!important;
+}
 /* main page */
 
 .list-books-title {
@@ -101,6 +104,19 @@ body, .app {
 
 .search-books-results {
   padding: 80px 10px 20px;
+}
+
+.search-loading {
+    display: block;
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
+	background-image: url('./icons/Fidget-Spinner-Loading.gif');
+  	position: absolute;
+  	left: 45%;
+  	z-index: 5;
 }
 
 /* books grid */

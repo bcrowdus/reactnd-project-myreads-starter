@@ -1,21 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import BooksGrid from "./BooksGrid";
+import Loading from "./Loading";
 
 class SearchBooks extends React.Component {
+
+  	state = { isLoading : false }
 
 	searchTerm = this.props.searchTerm;
 
     onSearchTermChange = (e) => {
-        const {  onSearchTermChange } = this.props
-      	this.searchTerm = e.currentTarget.value
-
+        const {  onSearchTermChange } = this.props;
+        
+      	this.setState({ isLoading: true });
+      	this.searchTerm = e.currentTarget.value;
+      
 		if(this.searchTerm.length === 0){
-            onSearchTermChange( this.searchTerm );
+            onSearchTermChange( this.searchTerm, this.onSearchComplete );          	
 		} else {
             this.onSearch(this.searchTerm);
 		}
-
 
     }
 
@@ -39,16 +43,15 @@ class SearchBooks extends React.Component {
             }
 		};
 	}
+	
+	onSearchComplete = () => this.setState({ isLoading: false });
 
 	onSearch = this.debounce(() => {
         const {  onSearchTermChange } = this.props
 
         if(this.searchTerm.length > 0){
-            onSearchTermChange( this.searchTerm );
-		}
-
-
-
+            onSearchTermChange( this.searchTerm, this.onSearchComplete );
+		}      	
 	}, 800);
 
     onNoBooks = () => {
@@ -59,11 +62,13 @@ class SearchBooks extends React.Component {
         } else {
         	return null;
 		}
-    }
-
+    }	
+                    
 	render() {
+        
 		const { books, searchTerm, onBookShelfChange } = this.props;
-
+       	const { isLoading } = this.state;
+              
 		return (
 			<div className="search-books">
               <div className="search-books-bar">
@@ -73,7 +78,10 @@ class SearchBooks extends React.Component {
                 </div>
               </div>
               <div className="search-books-results">
-                <BooksGrid books={books} onBookShelfChange={onBookShelfChange} onNoBooks={this.onNoBooks}/>
+          		<Loading visible={isLoading} />
+                <BooksGrid books={books} 
+          			onBookShelfChange={onBookShelfChange} 
+          			onNoBooks={this.onNoBooks}/>
               </div>
             </div>
 		)

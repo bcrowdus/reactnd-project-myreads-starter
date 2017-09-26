@@ -69,11 +69,12 @@ class BooksApp extends React.Component {
     }
 
 
-	onSearchTermChange = (searchTerm ) => {
+	onSearchTermChange = (searchTerm, onSearchComplete ) => {
 
         if(searchTerm === "") {
             let foundBooks = []
             this.setState({ foundBooks, searchTerm });
+          	onSearchComplete();
         } else {
             BooksAPI.search(searchTerm, 0)
                 .then( books =>  {
@@ -83,9 +84,9 @@ class BooksApp extends React.Component {
                         books.map( book => book.shelf = this.getBookShelf(book));
                         this.setState( { foundBooks : books, searchTerm : searchTerm } )
                     }
-
+              		onSearchComplete();
                 })
-        }
+        }      	
     }
 
     getBookShelf = (book) => {
