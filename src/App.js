@@ -66,7 +66,10 @@ class BooksApp extends React.Component {
                         let currentBook = current.books.find( cb => cb.id === book.id);
                         currentBook.shelf = shelf;
                         currentBook = current.foundBooks.find(cb => cb.id === book.id);
-                        currentBook.shelf = shelf;
+
+                        if( currentBook != null) {
+                            currentBook.shelf = shelf;
+                        }
                     }
                     return { books : current.books, foundBooks : current.foundBooks };
                 });
