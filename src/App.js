@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Switch } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import BookCase from './BookCase'
 import SearchBooks from './SearchBooks'
@@ -120,13 +120,35 @@ class BooksApp extends React.Component {
                          onBookShelfChange={this.onBookShelfChange} />
         )
     };
+
+    renderNoMatch = (location) => {
+        return (
+            <div id="NoMatch">
+
+                <a href="//www.google.com/">
+                    <span id="logo" aria-label="Google"></span>
+                </a>
+
+                <p>
+                    <b>404.</b> <ins>That’s an error.</ins>
+                </p>
+                <p style={{width: '50%'}}>The requested URL <code>{location.pathname}</code> was not found on this server.
+                    <ins>That’s all we know.</ins>
+                </p>
+            </div>
+        )
+
+    }
 	
   	render() {
 
     	return (
       		<div className="app">
-       			<Route exact path="/" render={ this.renderBookCase } />
-             	<Route exact path="/search" render={ this.renderSearch } />
+                <Switch>
+       			    <Route exact path="/" render={ this.renderBookCase } />
+             	    <Route exact path="/search" render={ this.renderSearch } />
+                    <Route render={ props => this.renderNoMatch(props.location) } />
+                </Switch>
       		</div>
     	)
   	}
