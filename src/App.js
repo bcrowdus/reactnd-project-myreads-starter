@@ -60,9 +60,12 @@ class BooksApp extends React.Component {
 			.then( data => { 
 				this.setState((current) => {
                     if(book.shelf === "none") {
+                        book.shelf = shelf;
                         current.books.push(book);
+                    } else {
+                        let currentBook = current.books.find( cb => cb.id === book.id);
+                        currentBook.shelf = shelf;
                     }
-                    book.shelf = shelf;
                     return { books : current.books };
                 });
             });
