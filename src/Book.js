@@ -1,40 +1,31 @@
 import React from 'react'
 import BookShelfChanger from './BookShelfChanger'
 
-class Book extends React.Component {
-
-    onChange = (e) => {
-        const { book, onBookShelfChange } = this.props;
+const Book = ({ book, onBookShelfChange }) => {
+    const onChange = (e) => {
         const shelf = e.currentTarget.value;
-
         onBookShelfChange(book, shelf);
-    }
+    };
 
-    getThumbnail = () => {
-        const { book } = this.props;
-
+    const getThumbnail = () => {
         if( book.imageLinks && book.imageLinks.thumbnail ) {
             return(<div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>);
         }
-    }
+    };
 
-    render() {
-		const { book } = this.props;
-		// some books apparently do not have authors
-        const authors = book.authors ? book.authors.join(", ") : "";
+    const authors = book.authors ? book.authors.join(", ") : "";
 
-        return (
-            <li>
-                <div className="book">
-                    <div className="book-top">
-                        { this.getThumbnail() }
-                		<BookShelfChanger shelf={book.shelf} onChange={this.onChange} />
-                    </div>
-                    <div className="book-title">{ book.title }</div>
-                    <div className="book-authors">{ authors }</div>
+    return (
+        <li>
+            <div className="book">
+                <div className="book-top">
+                    { getThumbnail() }
+                    <BookShelfChanger shelf={book.shelf} onChange={onChange} />
                 </div>
-            </li>
-        )
-	}
+                <div className="book-title">{ book.title }</div>
+                <div className="book-authors">{ authors }</div>
+            </div>
+        </li>
+    );
 }
 export default Book
