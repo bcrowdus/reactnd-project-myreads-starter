@@ -1,24 +1,29 @@
 import React from 'react'
 import Book from './Book'
 
-class BooksGrid extends React.Component {
+const BooksGrid = ({books, onBookShelfChange, onNoBooks}) => {
 
+    const onShowBook = (book) => {
+        return (
+            <Book key={book.id}
+                  book={book}
+                  onBookShelfChange={onBookShelfChange}/>
+        )
+    };
 
-    render() {
-        const { books, onBookShelfChange, onNoBooks } = this.props;
+    const onShowBooks = () => {
+        return (
+            <ol className="books-grid">
+                { books.map(book => onShowBook(book) ) }
+            </ol>
+        );
+    };
 
-        if( books.length === 0 ) {
-            return onNoBooks();
-        } else {
-            return (
-                <ol className="books-grid">
-                    {
-                        books.map(book => ( <Book key={book.id} book={book} onBookShelfChange={onBookShelfChange}/>  ))
-                    }
-                </ol>
-            );
-        }
+    if( books.length === 0 ) {
+        return onNoBooks();
+    } else {
+        return onShowBooks();
     }
-}
+};
 
 export default BooksGrid
