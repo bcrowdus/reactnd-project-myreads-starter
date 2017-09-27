@@ -21,7 +21,7 @@ class Book extends React.Component {
     render() {
 		const { book } = this.props;
 		// some books apparently do not have authors
-        const authors = book.authors ? book.authors.join("") : "";
+        const authors = book.authors ? book.authors.join(", ") : "";
 
         return (
             <li>
